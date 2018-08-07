@@ -1,6 +1,8 @@
+
 import pkg_resources
 import prettytable
 import csv
+import re
 
 def get_pkg_license(pkg):
     try:
@@ -29,13 +31,16 @@ def write_packages_and_licenses():
             licence_writer.writerow({'Package':str(pkg), 'Licence':get_pkg_license(pkg) })
 
 def check_package_status():
-
     with open('licence.csv', 'r') as csv_read_file:
         licence_reader = csv.DictReader(csv_read_file, delimiter='\t')
         for line in licence_reader:
-            if line['Licence'] == 'GNU LGPL':
+            if re.search('(GNU|GPL)',line['Licence']):
                 print ('The {} Package is using a Copy left licence and please replace it'.format(line['Package']))
 
-if __name__=='__main__':
+def main():
     write_packages_and_licenses()
     check_package_status()
+
+if __name__=='__main__':
+    main()
+
